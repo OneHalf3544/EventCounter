@@ -1,7 +1,6 @@
 package main;
 
 import main.classes.EventCounterImpl;
-
 import java.util.concurrent.TimeUnit;
 
 /**
