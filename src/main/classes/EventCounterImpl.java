@@ -1,8 +1,7 @@
 package main.classes;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * This is the main class
@@ -12,18 +11,15 @@ import java.util.concurrent.TimeUnit;
 public class EventCounterImpl implements EventCounter {
 
     private final long startTimeStamp;
-    volatile private LinkedList<Photo> photos;
-    /* LinkedList or ArrayList ? The first one is good for adding new items at the end of the collection and
-    * the second one is good for getting an item by index, thus we could implement countEvents by binarySearch.
-    * I assume that adding a new item will be much more often than the query countEvents method, so my choice is LinkedList
-    * Maybe I should consider hashed Collections ?*/
-    private long totalPhotoCount;
+    private ConcurrentLinkedDeque<Photo> photos;
+
+    private long currentPhotoId;
 
 
     public EventCounterImpl(long startTimeStamp) {
-        this.photos = new LinkedList<>();
+        this.photos = new ConcurrentLinkedDeque<>();
         this.startTimeStamp = startTimeStamp;
-        this.totalPhotoCount = 0;
+        this.currentPhotoId = 0;
     }
 
 
@@ -36,15 +32,15 @@ public class EventCounterImpl implements EventCounter {
     @Override
     public void eventOccurred() {
         long currentTime = System.currentTimeMillis();
-        final Photo currentPhoto = new Photo(totalPhotoCount, currentTime - startTimeStamp);
-        totalPhotoCount++;
+        final Photo currentPhoto = new Photo(currentPhotoId, currentTime - startTimeStamp);
+        currentPhotoId++;
         photos.add(currentPhoto);
     }
 
     // this one is just for testing long durations, HOUR and DAY for instance
     public void eventOccurred(long givenTime) {
-        photos.add(new Photo(totalPhotoCount, givenTime));
-        totalPhotoCount++;
+        photos.add(new Photo(currentPhotoId, givenTime));
+        currentPhotoId++;
     }
 
 
@@ -70,6 +66,11 @@ public class EventCounterImpl implements EventCounter {
 
         long eventsCountOverPeriod = 0;
         final long countEndsAtTime = Math.max(0, System.currentTimeMillis() - startTimeStamp - timePeriodDuration);
+
+        /* Почему Deque, а не Queue ? Итерироваться по Queue раза в полтора - два быстрее,
+         * чем поддерживать два порядка обхода для Deque, но т.к. нам интересны именно последние события,
+         * то лучше начать перебирать события с конца,
+         * нежели начинать с начала и перебрать (потеницально) почти всю коллекцию. */
 
         Iterator<Photo> iterator = photos.descendingIterator();
         while(iterator.hasNext()) {
