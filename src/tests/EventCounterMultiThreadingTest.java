@@ -23,14 +23,14 @@ public class EventCounterMultiThreadingTest {
     @Test
     public void testTwoThreads() throws InterruptedException {
 
-        long count1 = 40_000;
+        final int count1 = 40_000;
         Thread thread1 = new Thread(() -> {
             for (int i = 0; i < count1; i++) {
                 eventCounter.eventOccurred();
             }
         });
 
-        long count2 = 10_000;
+        final int count2 = 10_000;
         Thread thread2 = new Thread(() -> {
             for (int i = 0; i < count2; i++) {
                 eventCounter.eventOccurred();
@@ -49,28 +49,28 @@ public class EventCounterMultiThreadingTest {
     @Test
     public void testFourThreads() throws InterruptedException {
 
-        long count1 = 40_000;
+        final int count1 = 40_000;
         Thread thread1 = new Thread(() -> {
             for (int i = 0; i < count1; i++) {
                 eventCounter.eventOccurred();
             }
         });
 
-        long count2 = 40_000;
+        final int count2 = 40_000;
         Thread thread2 = new Thread(() -> {
             for (int i = 0; i < count2; i++) {
                 eventCounter.eventOccurred();
             }
         });
 
-        long count3 = 100_000;
+        final int count3 = 100_000;
         Thread thread3 = new Thread(() -> {
             for (int i = 0; i < count3; i++) {
                 eventCounter.eventOccurred();
             }
         });
 
-        long count4 = 100_000;
+        final int count4 = 100_000;
         Thread thread4 = new Thread(() -> {
             for (int i = 0; i < count4; i++) {
                 eventCounter.eventOccurred();
