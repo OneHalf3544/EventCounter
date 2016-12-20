@@ -33,15 +33,15 @@ public class EventCounterStressTest {
     }
 
     @Test
-    public void test30M_TwoThreads() throws InterruptedException {
-        long count1 = 15_000_000;
+    public void test50M_TwoThreads() throws InterruptedException {
+        long count1 = 25_000_000;
         Thread thread1 = new Thread(() -> {
             for (long i = 0L; i < count1; i++) {
                 eventCounter.eventOccurred();
             }
         });
 
-        long count2 = 15_000_000;
+        long count2 = 25_000_000;
         Thread thread2 = new Thread(() -> {
             for (long i = 0L; i < count2; i++) {
                 eventCounter.eventOccurred();
@@ -55,14 +55,13 @@ public class EventCounterStressTest {
         thread2.join();
 
         assertEquals(count1+ count2, eventCounter.getEventsCountLastMinute());
-        // as expected approximately two times faster
     }
 
     @Ignore
     @Test
     public void TooMuchForMyLaptop() {
         // Java out of memory Heap space
-        final long bigCount = 50_000_000;
+        final long bigCount = 100_000_000;
         for (long i = 0L; i < bigCount; i++) {
             eventCounter.eventOccurred();
         }
