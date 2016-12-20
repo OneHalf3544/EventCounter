@@ -1,6 +1,6 @@
 package tests;
 
-import main.classes.EventCounterImpl;
+import main.java.EventCounterImpl;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

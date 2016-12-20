@@ -1,4 +1,4 @@
-package main.classes;
+package main.java;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedDeque;

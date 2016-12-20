@@ -1,4 +1,4 @@
-package main.classes;
+package main.java;
 
 /**
  * A class for simple object
